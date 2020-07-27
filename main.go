@@ -8,24 +8,29 @@ import (
 	"os"
 )
 
+const (
+	src = "F:\\Исходная папка"
+	dst = "F:\\Целевая папка\\"
+)
+
 func getDataList(directory string) []string {
-	var list []string
+	/*
+		Принимаем директорию для поиска вложенных файлов
+		Отдаем список файлов в директории
+	*/
+	var fileList []string
 
 	files, err := ioutil.ReadDir(directory)
 	if err != nil {
 		log.Fatal(err)
 	}
 	for _, f := range files {
-		list = append(list, f.Name())
-		//fmt.Println(f.Name())
-
+		fileList = append(fileList, f.Name())
 	}
-	return list
+	return fileList
 }
 
 func folderList(list []string) []string {
-
-	//fmt.Println("list = ", list)
 
 	var dataList []string
 
@@ -36,7 +41,7 @@ func folderList(list []string) []string {
 
 		createFolder(result)
 
-		err := os.Chdir(`F:\ЯндексДиск.Безлимит\`)
+		err := os.Chdir(src)
 		if err != nil {
 			fmt.Println("Ошибка смены директории ")
 		}
@@ -46,9 +51,9 @@ func folderList(list []string) []string {
 		}
 		defer in.Close()
 
-		err = os.Chdir(`f:\photo\` + result)
+		err = os.Chdir(dst + result)
 		if err != nil {
-			fmt.Println("Ошибка смены директории куда копироват")
+			fmt.Println("Ошибка смены директории куда копировать", err)
 		}
 		out, err := os.Create(item)
 		if err != nil {
@@ -67,34 +72,30 @@ func folderList(list []string) []string {
 	return dataList
 }
 
-func getFileList() {
-
-}
-
 func createFolder(folderName string) {
-
-	err := os.Chdir(`f:\photo\`)
+	err := os.Chdir(dst)
 	if err != nil {
 		fmt.Println("Ошибка смены директории")
 	}
-	err = os.Mkdir(folderName, 0777)
-	if err != nil {
-		fmt.Println("Ошибка создания папки")
-	}
 
+	if _, err := os.Stat(folderName); err != nil {
+		if os.IsNotExist(err) {
+			err = os.Mkdir(folderName, 0777)
+			if err != nil {
+				fmt.Println("Ошибка создания папки")
+			}
+		} else {
+			fmt.Println("Папка существует")
+		}
+	}
 }
 
 func main() {
-	fmt.Println("run")
 
-	list := getDataList("F:\\ЯндексДиск.Безлимит")
+	list := getDataList(src)
 
 	folders := folderList(list)
 	for _, folder := range folders {
 		fmt.Println("Folderlist= ", folder)
-
 	}
-
-	//createFolder("07.07.2020")
-
 }
