@@ -9,11 +9,11 @@ import (
 )
 
 const (
-	src = "F:\\Исходная папка"
+	src = "D:\\Исходная папка"
 	dst = "F:\\Целевая папка\\"
 )
 
-func getDataList(directory string) []string {
+func GetDataList(directory string) []string {
 	/*
 		Принимаем директорию для поиска вложенных файлов
 		Отдаем список файлов в директории
@@ -92,7 +92,7 @@ func createFolder(folderName string) {
 
 func main() {
 
-	list := getDataList(src)
+	list := GetDataList(src)
 
 	folders := folderList(list)
 	for _, folder := range folders {
